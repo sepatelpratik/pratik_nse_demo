@@ -51,7 +51,7 @@ async function getData() {
 
   } catch (err) {
     console.error('Error:', err.message);
-    return [];
+    return err;
   } finally {
     await browser.close();
   }
