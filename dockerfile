@@ -1,35 +1,33 @@
-FROM node:18-slim
+# Use the official Node.js image as base
+FROM node:18-alpine
 
-# Install required packages for Chromium
-RUN apt-get update && apt-get install -y \
-  wget \
-  curl \
-  fonts-liberation \
-  libasound2 \
-  libatk-bridge2.0-0 \
-  libatk1.0-0 \
-  libcups2 \
-  libdbus-1-3 \
-  libx11-xcb1 \
-  libxcb1 \
-  libxcomposite1 \
-  libxdamage1 \
-  libxrandr2 \
-  libgbm-dev \
-  libgtk-3-0 \
-  libnss3 \
-  libxss1 \
-  libxtst6 \
-  xdg-utils \
-  ca-certificates \
-  --no-install-recommends && \
-  apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install dependencies needed for Puppeteer in Alpine
+RUN apk add --no-cache \
+      chromium \
+      nss \
+      freetype \
+      harfbuzz \
+      ca-certificates \
+      ttf-freefont
 
+# Set environment variables for Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+
+# Create and set the working directory
 WORKDIR /app
 
+# Copy package files first for better layer caching
 COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
+# Copy the rest of the application
 COPY . .
 
+# Expose any necessary ports (if your app has a server)
+# EXPOSE 3000
+
+# Command to run the application
 CMD ["node", "app.js"]
