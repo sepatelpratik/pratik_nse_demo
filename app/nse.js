@@ -1,13 +1,8 @@
 const puppeteer = require('puppeteer');
-const { setDefaultOptions } = require('expect-puppeteer');
-
-// Configure default Puppeteer expectations
-setDefaultOptions({ timeout: 10000 });
 
 async function getData(symbol = 'RELIANCE', strikePrice = 1200) {
   console.log(`Fetching data for ${symbol} with strike price ${strikePrice}`);
   
-  // Configure browser launch options
   const browser = await puppeteer.launch({
     headless: 'new',
     args: [
@@ -24,7 +19,7 @@ async function getData(symbol = 'RELIANCE', strikePrice = 1200) {
   try {
     const page = await browser.newPage();
     
-    // Configure page settings
+    // Configure timeouts
     await page.setDefaultNavigationTimeout(60000);
     await page.setDefaultTimeout(30000);
     
@@ -39,23 +34,21 @@ async function getData(symbol = 'RELIANCE', strikePrice = 1200) {
       'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
     });
 
-    // Set cookies and cache behavior
-    await page.setCacheEnabled(false);
-    
     console.log("Navigating to NSE option chain...");
     
-    // First, load the main page to set cookies/session
     await page.goto('https://www.nseindia.com/option-chain', {
       waitUntil: 'networkidle2',
       timeout: 60000
     });
 
-    // Wait for necessary elements to ensure page is loaded
-    await page.waitForSelector('#equity-option-chain', { visible: true, timeout: 30000 });
+    // Wait for selector without expect-puppeteer
+    await page.waitForSelector('#equity-option-chain', { 
+      visible: true, 
+      timeout: 30000 
+    });
     
     console.log("Fetching JSON data from API...");
     
-    // Now fetch the JSON using fetch in browser context
     const jsonData = await page.evaluate(async (symbol) => {
       try {
         const response = await fetch(
@@ -82,15 +75,9 @@ async function getData(symbol = 'RELIANCE', strikePrice = 1200) {
 
     console.log("Processing data...");
     
-    // Filter by strikePrice
-    const filtered = [];
-    if (jsonData?.records?.data) {
-      jsonData.records.data.forEach((item) => {
-        if (item.strikePrice === strikePrice) {
-          filtered.push(item);
-        }
-      });
-    }
+    const filtered = jsonData?.records?.data?.filter(item => 
+      item.strikePrice === strikePrice
+    ) || [];
 
     console.log(`Found ${filtered.length} entries for strike price ${strikePrice}.`);
     return {
@@ -106,7 +93,6 @@ async function getData(symbol = 'RELIANCE', strikePrice = 1200) {
     return {
       success: false,
       error: err.message,
-      stack: err.stack,
       timestamp: new Date().toISOString()
     };
   } finally {
