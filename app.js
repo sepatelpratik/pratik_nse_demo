@@ -13,9 +13,9 @@ app.get('/time', async (req, res) => {
 app.get('/data', async (req, res) => {
   try {
     let data = await getData();
-   return res.send(data)
+   return res.status(200).send(data)
   } catch (error) {
-    res.send(error)
+    res.status(500).send(error)
   }
 
 });
