@@ -5,8 +5,12 @@ const {getData} = require('./nse')
 // Create an Express application
 const app = express();
 
+app.get('/time', async (req, res) => {
+    
+  res.send(new Date().toString());
 
-app.get('/getData', async (req, res) => {
+});
+app.get('/data', async (req, res) => {
   try {
     let data = await getData();
     console.log("get data0",data);
