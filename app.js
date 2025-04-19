@@ -6,7 +6,7 @@ const {getData} = require('./nse')
 const app = express();
 
 app.get('/time', async (req, res) => {
-    
+  console.log("time call....")
   res.send(new Date().toString());
 
 });
@@ -22,6 +22,8 @@ app.get('/data', async (req, res) => {
 
 // Set a simple route for the home page
 app.get('/', (req, res) => {
+  
+  console.log("Hello World  call....")
   res.send('Hello, World!');
 });
 
@@ -30,5 +32,5 @@ const port = process.env.PORT || 3000;
 
 // Start the server on the specified port
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on... http://localhost:${port}`);
 });

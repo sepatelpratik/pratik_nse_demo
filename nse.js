@@ -1,9 +1,14 @@
 const puppeteer = require('puppeteer');
 
 async function getData() {
+  console.log("getData call");
+  
   const browser = await puppeteer.launch({ headless: 'new' }); // or `true` for older versions
+  console.log("puppeteer lanch");
+  
   const page = await browser.newPage();
 
+  console.log("browser done")
   // Set necessary headers to avoid 403
   await page.setUserAgent(
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36'
@@ -33,9 +38,12 @@ async function getData() {
           },
         }
       );
+      console.log("jsonData call...");
+      
       return await response.json();
     });
-
+    console.log("go to filter...");
+    
     // Filter by strikePrice
     const filtered = [];
     if (jsonData.records && jsonData.records.data) {
@@ -50,9 +58,11 @@ async function getData() {
     return filtered;
 
   } catch (err) {
+    console.log("error----",err)
     console.error('Error:', err.message);
     return err;
   } finally {
+    console.log("finaly call")
     await browser.close();
   }
 }
