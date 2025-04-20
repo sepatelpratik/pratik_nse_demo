@@ -1,7 +1,7 @@
 // Import the express module
 const express = require("express");
 const { getData,saveDataToFile } = require("./nse");
-
+const {getCurrentIP} = require("./ip")
 // Create an Express application
 const app = express();
 app.use(express.json());
@@ -37,4 +37,5 @@ const port = process.env.PORT || 3000;
 // Start the server on the specified port
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
+  console.log(getCurrentIP())
 });
