@@ -31,6 +31,4 @@ function optionData(nseData) {
     })
     return resData
 }
-module.exports ={
-    optionData
-}
+export { optionData }

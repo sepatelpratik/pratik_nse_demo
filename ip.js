@@ -1,4 +1,4 @@
-const os = require('os');
+import os from "os";
 
 function getCurrentIP() {
   const interfaces = os.networkInterfaces();
@@ -14,4 +14,4 @@ function getCurrentIP() {
 }
 
 console.log('Your IP Address is:', getCurrentIP());
-module.exports={getCurrentIP}
+export { getCurrentIP }

@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 import { wrapper } from 'axios-cookiejar-support';
 import { CookieJar } from 'tough-cookie';
 import axios from 'axios';
-import {optionData} from "./data"
+import {optionData} from "./data.js"
 // __dirname equivalent in ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
