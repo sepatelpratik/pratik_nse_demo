@@ -1,6 +1,6 @@
 import express from "express";
-import { getData, saveDataToFile } from "./nse.js";
-import { getCurrentIP } from "./ip.js";
+import { getData,getNiftyData } from "./nse.js";
+import { getCurrentIP,saveDataToFile,readDataFromFile } from "./ip.js";
 
 // Create an Express application
 const app = express();
@@ -19,18 +19,7 @@ app.use((req, res, next) => {
   next();
 });
 
-
-app.post('/save-data', async (req, res) => {
-  try {
-    await saveDataToFile({ cookie: req.headers['cookie-data'] });
-    res.json({ success: true, message: 'Data saved successfully.' });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ success: false, message: 'Failed to save data.' });
-  }
-});
-
-app.get("/data", async (req, res) => {
+app.get("/api/data", async (req, res) => {
   try {
     const data = await getData();
     res.status(200).send(data);
@@ -40,6 +29,29 @@ app.get("/data", async (req, res) => {
   }
 });
 
+
+app.post("/api/save", async (req, res) => {
+  try {
+    const data = await saveDataToFile(req.body);
+    res.status(200).send({ success: true, message: 'save  data.' });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: 'Failed to fetch data.', error });
+  }
+});
+app.get("/api/read", async (req, res) => {
+  try {
+    const data = await readDataFromFile();
+    res.status(200).send(data);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: 'Failed to fetch data.', error });
+  }
+});
+app.get("/api/text", async (req, res) => {
+  const data = await getNiftyData();
+  res.send({ text: data });
+});
 app.get("/api", (req, res) => {
   res.send("Hello, World!");
 });

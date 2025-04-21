@@ -31,4 +31,11 @@ function optionData(nseData) {
     })
     return resData
 }
-export { optionData }
+
+
+function convertToText(data) {
+    let nifty50 = data.marketState[0];
+    let resData = `Nifty Price is ${nifty50.last} . change is ${nifty50.variation.toFixed(2)} as percentage wise ${nifty50.percentChange}`;
+    return resData
+}
+export { optionData, convertToText }
