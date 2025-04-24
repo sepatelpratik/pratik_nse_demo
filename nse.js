@@ -44,15 +44,12 @@ async function getData(symbol = "RELIANCE", strikePrice = 1200) {
 
     const filtered = optionData(getNse);
 
-    console.log(
-      `Found ${filtered.length} entries for strike price ${strikePrice}.`
-    );
     return {
       success: true,
-      data: filtered,
+      data: filtered.resData,
       timestamp: new Date().toISOString(),
       symbol,
-      strikePrice,
+      isOK: filtered.isOK
     };
   } catch (err) {
     console.error("Error in getData:", err);

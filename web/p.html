@@ -1,66 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Option Chain Data Viewer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-            position: sticky;
-            top: 0;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        .error {
-            color: red;
-            margin-top: 20px;
-        }
-        .loading {
-            color: #666;
-            font-style: italic;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>API Data Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+    .status {
+      padding: 10px;
+      margin-bottom: 15px;
+      color: #fff;
+      font-weight: bold;
+    }
+    .status.ok {
+      background-color: #4caf50;
+    }
+    .status.not-ok {
+      background-color: #f44336;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    .header-info {
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Option Chain Data</h1>
-    <div id="loading" class="loading">Loading data...</div>
-    <div id="error" class="error"></div>
-    <table id="dataTable">
-        <thead>
-            <tr>
-                <th>Strike Price</th>
-                <th>Expiry Date</th>
-                <th>Price</th>
-                <th>Final Calculation</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data will be inserted here by JavaScript -->
-        </tbody>
-    </table>
+  <h1>RELIANCE Options Data</h1>
+  <div id="status-banner" class="status"></div>
+  <div class="header-info" id="meta-info"></div>
 
-    <script src="script.js"></script>
+  <table id="data-table">
+    <thead>
+      <tr>
+        <th>Strike Price</th>
+        <th>Expiry Date</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Final Calculation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data rows go here -->
+    </tbody>
+  </table>
+
+  <script>
+    fetch('http://localhost:3000/api/data')
+      .then(res => res.json())
+      .then(json => {
+        const { data, timestamp, symbol, strikePrice, isOK } = json;
+
+        const statusBanner = document.getElementById('status-banner');
+        statusBanner.textContent = isOK ? "Status: OK" : "Status: NOT OK";
+        statusBanner.className = `status ${isOK ? 'ok' : 'not-ok'}`;
+
+        document.getElementById('meta-info').innerHTML = `
+          <strong>Symbol:</strong> ${symbol} &nbsp;&nbsp;
+          <strong>Base Strike Price:</strong> ${strikePrice} &nbsp;&nbsp;
+          <strong>Last Updated:</strong> ${new Date(timestamp).toLocaleString()}
+        `;
+        
+        const tbody = document.getElementById('data-table').querySelector('tbody');
+        data.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.strikePrice}</td>
+            <td>${item.expiryDate}</td>
+            <td>${item.price}</td>
+            <td>${item.qty}</td>
+            <td>${item.finalCal}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(err => {
+        console.error('Error fetching data:', err);
+        document.getElementById('status-banner').textContent = 'Error loading data.';
+        document.getElementById('status-banner').className = 'status not-ok';
+      });
+  </script>
 </body>
 </html>

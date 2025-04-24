@@ -4,12 +4,16 @@ const options = [
         
         expiryDate:"29-May-2025",
         strikePrice: 1250,
-        multi:3
+        multi:3,
+        takeKey:"bidprice",
+        qty:"bidQty"
     },
     {
         expiryDate:"26-Jun-2025",
         strikePrice: 1300,
-        multi:4
+        multi:4,
+        takeKey:"askPrice",
+        qty:"askQty"
     }
 ]
 
@@ -21,15 +25,15 @@ function optionData(nseData) {
                 let ans = {
                     strikePrice: item.strikePrice,
                     expiryDate: item.expiryDate,
-                    price : item.CE.lastPrice,
-
+                    price : item.CE[option.takeKey],
+                    qty : item.CE[option.qty],
                 }
                 ans.finalCal = Math.ceil(ans.price * option.multi)
                 resData.push(ans);
             }
         })
     })
-    return resData
+    return { resData , isOK : (resData[0].finalCal >= resData[1].finalCal)}
 }
 
 
