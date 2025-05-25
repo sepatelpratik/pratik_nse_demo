@@ -23,7 +23,7 @@ async function getNseOptionChain(symbol = "RELIANCE") {
       { headers }
     );
     const response = await client.get(
-      `https://www.nseindia.com/api/option-chain-equities?symbol=${symbol}`,
+      `https://www.nseindia.com/api/quote-derivative?symbol=${symbol}`,
       { headers }
     );
 
@@ -46,7 +46,7 @@ async function getData(symbol = "RELIANCE", strikePrice = 1200) {
 
     return {
       success: true,
-      data: filtered.resData,
+      data: filtered,
       timestamp: new Date().toISOString(),
       symbol,
       isOK: filtered.isOK

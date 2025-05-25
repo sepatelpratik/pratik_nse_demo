@@ -1,56 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Text to Speech with API</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Option Strategies</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      padding: 2rem;
-      background-color: #f0f0f0;
+      margin: 30px;
+      background-color: #f9f9f9;
     }
-    textarea {
+
+    h1 {
+      color: #333;
+    }
+
+    .strategy {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .status {
+      font-weight: bold;
+      color: red;
+    }
+
+    .status.ok {
+      color: green;
+    }
+
+    table {
       width: 100%;
-      height: 100px;
-      margin-bottom: 1rem;
-      font-size: 1rem;
+      border-collapse: collapse;
+      margin-top: 10px;
     }
-    button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      cursor: pointer;
+
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+
+    th {
+      background-color: #eee;
     }
   </style>
 </head>
 <body>
+  <h1>Option Strategies for RELIANCE</h1>
 
-  <h2>Parth Idea No  1</h2>
-  <div id="text-input" ></div>
-  <br>
-  <button onclick="sendAndSpeak()">Send & Speak</button>
+  <div id="strategies">Loading...</div>
 
   <script>
-    async function sendAndSpeak() {
-      const inputText = document.getElementById('text-input').value;
-
+    async function loadData() {
       try {
-        const response = await fetch('/api/read');
+        const res = await fetch("http://localhost:3000/api/data");
+        const data = await res.json();
 
-        const data = await response.json();
-
-        if (data && data.text) {
-          const utterance = new SpeechSynthesisUtterance(data.text);
-          window.speechSynthesis.speak(utterance);
-        } else {
-          alert('Invalid response from server.');
+        if (!data.success || !data.data) {
+          document.getElementById("strategies").innerHTML = "No data available.";
+          return;
         }
 
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to fetch data from the server.');
+        const container = document.getElementById("strategies");
+        container.innerHTML = "";
+
+        data.data.forEach(strategy => {
+          const strategyDiv = document.createElement("div");
+          strategyDiv.className = "strategy";
+
+          const statusClass = strategy.isOK ? "status ok" : "status";
+
+          // Difference between finalPrices of two options
+          let finalPrices = strategy.option.map(opt => opt.finalPrice);
+          let finalDifference = 0;
+          if (finalPrices.length === 2) {
+            finalDifference = Math.abs(finalPrices[0] - finalPrices[1]).toFixed(2);
+          }
+
+          const optionsHTML = strategy.option.map(opt => `
+            <tr>
+              <td>${opt.info}</td>
+              <td>${opt.takeKey.toUpperCase()}</td>
+              <td>${opt.qty}</td>
+              <td>${opt.price}</td>
+              <td>${opt.finalPrice}</td>
+            </tr>
+          `).join("");
+
+          strategyDiv.innerHTML = `
+            <h2>${strategy.name}</h2>
+            <p class="${statusClass}">
+              Status: ${strategy.isOK ? "OK" : "Not OK"} — 
+              Final Price Difference: ${finalDifference}
+            </p>
+            <table>
+              <thead>
+                <tr>
+                  <th>Info</th>
+                  <th>Type</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Final Price</th>
+                </tr>
+              </thead>
+              <tbody>${optionsHTML}</tbody>
+            </table>
+          `;
+
+          container.appendChild(strategyDiv);
+        });
+
+      } catch (err) {
+        document.getElementById("strategies").innerHTML = "Error fetching data.";
+        console.error("Fetch error:", err);
       }
     }
-  </script>
 
+    loadData();
+  </script>
 </body>
 </html>
