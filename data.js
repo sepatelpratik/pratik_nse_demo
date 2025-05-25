@@ -34,17 +34,17 @@ const sytergy = {
         isOk: false,
         diff: 0,
         optionData: [{
-            identifier: "OPTSTKRELIANCE26-06-2025CE1550.00",
+            identifier: "OPTSTKRELIANCE26-06-2025CE1450.00",
             qty: 1500,
             takeKey: "ask",
             multi : 3,
-            info:"1550 CE jun 2025",
+            info:"1450 CE jun 2025",
         }, {
-            identifier: "OPTSTKRELIANCE31-07-2025CE1600.00",
+            identifier: "OPTSTKRELIANCE31-07-2025CE1500.00",
             qty: 2000,
             takeKey: "bid",
             multi : 4,
-            info:"1600 CE July 2025",
+            info:"1500 CE July 2025",
         }],
         sytergyCal: function (data) {
             this.diff = data[0].finalPrice - data[1].finalPrice;
