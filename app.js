@@ -1,7 +1,9 @@
 import express from "express";
 import { getData,getNiftyData } from "./nse.js";
-import { getCurrentIP,saveDataToFile,readDataFromFile } from "./ip.js";
+import { getCurrentIP } from "./ip.js";
+import { startCron } from "./cron.js";
 
+// await getDb(); // Initialize MongoDB connection
 // Create an Express application
 const app = express();
 app.use(express.json());
@@ -18,7 +20,6 @@ app.use((req, res, next) => {
 
   next();
 });
-
 app.get("/api/data", async (req, res) => {
   try {
     const data = await getData();
@@ -27,30 +28,6 @@ app.get("/api/data", async (req, res) => {
     console.log(error);
     res.status(500).json({ success: false, message: 'Failed to fetch data.', error });
   }
-});
-
-
-app.post("/api/save", async (req, res) => {
-  try {
-    const data = await saveDataToFile(req.body);
-    res.status(200).send({ success: true, message: 'save  data.' });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: 'Failed to fetch data.', error });
-  }
-});
-app.get("/api/read", async (req, res) => {
-  try {
-    const data = await readDataFromFile();
-    res.status(200).send(data);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: 'Failed to fetch data.', error });
-  }
-});
-app.get("/api/text", async (req, res) => {
-  const data = await getNiftyData();
-  res.send({ text: data });
 });
 app.get("/api", (req, res) => {
   res.send("Hello, World!");
@@ -62,4 +39,7 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
   console.log(getCurrentIP());
+  
+startCron();
 });
+

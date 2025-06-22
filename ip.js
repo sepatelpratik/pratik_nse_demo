@@ -2,17 +2,32 @@ import os from "os";
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { writeFile, mkdir } from 'fs/promises';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+const nowDate = new Date();
+console.log(nowDate.getDate()+"-"+nowDate.getHours() + '-' + nowDate.getMinutes() + '-' + nowDate.getSeconds());
 const DATA_FILE = path.join(__dirname, 'data.json');
+
+function getDateStr() {
+  const now = new Date();
+  const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const time = `${String(now.getHours()).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}-${String(now.getSeconds()).padStart(2, '0')}`;
+  return `${date}-${time}`;
+}
+
+function getYearMonthStr() {
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  return {year: now.getFullYear(), month: String(now.getMonth() + 1).padStart(2, '0'),  dateStr: dateStr,date: now.getDate(), hours: now.getHours(), minutes: now.getMinutes(), seconds: now.getSeconds() };
+}
 
 function getCurrentIP() {
   const interfaces = os.networkInterfaces();
   for (const name of Object.keys(interfaces)) {
     for (const net of interfaces[name]) {
-      // Skip internal (i.e., 127.0.0.1) and non-IPv4 addresses
       if (net.family === 'IPv4' && !net.internal) {
         return net.address;
       }
@@ -29,14 +44,20 @@ async function readDataFromFile() {
     throw new Error('Error reading file: ' + err.message);
   }
 }
-
-async function saveDataToFile(data) {
+async function saveDataToFile(data,name ='reliance') {
   try {
-    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2));
+    const getYearMonthStrObj = getYearMonthStr();
+    const dir = path.resolve(__dirname, `db/${name}/${getYearMonthStrObj.year}/${getYearMonthStrObj.month}/${getYearMonthStrObj.date}`);
+    const fileName = `reliance-${Date.now()}.json`;
+    const filePath = path.join(dir, fileName);
+
+    await fs.mkdir(dir, { recursive: true }); // create directory if not exists
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
+
+    console.log(`✅ File saved: ${filePath}`);
   } catch (err) {
-    throw new Error('Error writing file: ' + err.message);
+    console.error('❌ Error writing file:', err.message);
   }
 }
-
 console.log('Your IP Address is:', getCurrentIP());
 export { getCurrentIP,readDataFromFile,saveDataToFile }

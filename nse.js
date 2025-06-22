@@ -1,7 +1,8 @@
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar } from "tough-cookie";
 import axios from "axios";
-import { optionData, convertToText } from "./data.js";
+import { optionData, convertToText } from "./cal.js";
+import { saveDataToFile } from "./ip.js";
 
 async function getNseOptionChain(symbol = "RELIANCE") {
   const jar = new CookieJar();
@@ -35,18 +36,24 @@ async function getNseOptionChain(symbol = "RELIANCE") {
   }
 }
 
+async function saveOptionsCron(symbol = "RELIANCE") {
+  // const getYearMonthStrObj = getYearMonthStr(); 
+   let nseData = await getNseOptionChain(symbol);
+  saveDataToFile({ symbol, timestamp:Date.now(), dateLocal: new Date().toLocaleTimeString(),date: new Date(),data:nseData }, symbol);
+}
+
 async function getData(symbol = "RELIANCE", strikePrice = 1200) {
-  console.log(`Fetching data for ${symbol} with strike price ${strikePrice}`);
   try {
     let getNse = await getNseOptionChain(symbol);
 
     console.log("Processing data...");
 
     const filtered = optionData(getNse);
-
+    // saveMultipleData(filtered);
     return {
       success: true,
       data: filtered,
+
       timestamp: new Date().toISOString(),
       symbol,
       isOK: filtered.isOK
@@ -90,4 +97,4 @@ async function getNiftyData() {
   }
 }
 
-export { getData, getNiftyData };
+export { getData, getNiftyData,saveOptionsCron };
