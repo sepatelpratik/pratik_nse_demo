@@ -1,7 +1,9 @@
 
-const optionsIdentifier = ["OPTSTKRELIANCE28-08-2024CE1500.00", "OPTSTKRELIANCE28-08-2025CE1600.00", "OPTSTKRELIANCE31-07-2025CE1400.00", "OPTSTKRELIANCE31-07-2025CE1500.00", "OPTSTKRELIANCE31-07-2025CE1600.00",
+const optionsIdentifier = [
+    "OPTSTKRELIANCE28-08-2024CE1500.00", "OPTSTKRELIANCE28-08-2025CE1600.00", "OPTSTKRELIANCE31-07-2025CE1400.00", "OPTSTKRELIANCE31-07-2025CE1500.00", "OPTSTKRELIANCE31-07-2025CE1600.00",
     "OPTSTKRELIANCE26-06-2025CE1350.00", "OPTSTKRELIANCE26-06-2025CE1400.00", "OPTSTKRELIANCE26-06-2025CE1450.00",
     "OPTSTKRELIANCE26-06-2025CE1500.00", "OPTSTKRELIANCE26-06-2025CE1550.00", "OPTSTKRELIANCE26-06-2025CE1600.00",
+    "OPTSTKRELIANCE31-07-2025CE1450.00",
     "OPTSTKRELIANCE28-08-2025PE1300.00",
     "OPTSTKRELIANCE28-08-2025CE1500.00",
     "OPTSTKRELIANCE28-08-2025CE1600.00",
@@ -47,17 +49,17 @@ const sytergy = {
         isOk: false,
         diff: 0,
         optionData: [{
-            identifier: "OPTSTKRELIANCE26-06-2025CE1450.00",
+            identifier: "OPTSTKRELIANCE31-07-2025CE1450.00",
             qty: 1500,
             takeKey: "ask",
             multi: 3,
-            info: "1450 CE jun 2025",
+            info: "1450 CE jul 2025",
         }, {
-            identifier: "OPTSTKRELIANCE31-07-2025CE1500.00",
+            identifier: "OPTSTKRELIANCE28-08-2025CE1500.00",
             qty: 2000,
             takeKey: "bid",
             multi: 4,
-            info: "1500 CE July 2025",
+            info: "1500 CE Aug 2025",
         }],
         sytergyCal: function (data) {
             this.diff = data[0].finalPrice - data[1].finalPrice;
