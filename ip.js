@@ -2,7 +2,6 @@ import os from "os";
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { writeFile, mkdir } from 'fs/promises';
 
 
 const __filename = fileURLToPath(import.meta.url);
