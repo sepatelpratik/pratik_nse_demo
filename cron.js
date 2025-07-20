@@ -9,8 +9,8 @@ function isWithinMarketHours() {
   const minutes = now.getMinutes();
 
   const totalMinutes = hours * 60 + minutes;
-  const startMinutes = 9 * 60 + 30;  // 9:30 AM = 570
-  const endMinutes = 22 * 60 + 35;   // 3:30 PM = 930
+  const startMinutes = 9 * 60 + 10;  // 9:30 AM = 570
+  const endMinutes = 15 * 60 + 35;   // 3:30 PM = 930
 
   return totalMinutes >= startMinutes && totalMinutes <= endMinutes;
 }
