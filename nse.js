@@ -46,14 +46,11 @@ async function getData(symbol = "RELIANCE", strikePrice = 1200) {
   try {
     let getNse = await getNseOptionChain(symbol);
 
-    console.log("Processing data...");
-
     const filtered = optionData(getNse);
     // saveMultipleData(filtered);
     return {
       success: true,
       data: filtered,
-
       timestamp: new Date().toISOString(),
       symbol,
       isOK: filtered.isOK

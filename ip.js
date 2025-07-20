@@ -47,7 +47,7 @@ async function saveDataToFile(data,name ='reliance') {
   try {
     const getYearMonthStrObj = getYearMonthStr();
     const dir = path.resolve(__dirname, `db/${name}/${getYearMonthStrObj.year}/${getYearMonthStrObj.month}/${getYearMonthStrObj.date}`);
-    const fileName = `reliance-${Date.now()}.json`;
+    const fileName = `${name}-${Date.now()}.json`;
     const filePath = path.join(dir, fileName);
 
     await fs.mkdir(dir, { recursive: true }); // create directory if not exists

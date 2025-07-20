@@ -60,16 +60,17 @@ function optionCal(data) {
                 price: averagePrice,
                 identifier: item.identifier,
                 qty: targetQuantity,
-                finalPrice: Math.ceil(averagePrice * item.multi),
+                finalPrice: parseFloat((averagePrice * item.multi).toFixed(2)),
                 takeKey: item.takeKey,
                 info: item.info,
+                indKey: item.indKey,
+                multi: item.multi,
             })
         });
         resData.push({
             name: sytergyData.name, 
-            isOK: sytergy.s1.sytergyCal(option),
-            diff: option[0].finalPrice - option[1].finalPrice,
-            option: option
+            option: option,
+            ...sytergy[key].sytergyCal(option)
         })  
     })
     return resData;

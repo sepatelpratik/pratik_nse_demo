@@ -10,7 +10,7 @@ function isWithinMarketHours() {
 
   const totalMinutes = hours * 60 + minutes;
   const startMinutes = 9 * 60 + 30;  // 9:30 AM = 570
-  const endMinutes = 15 * 60 + 35;   // 3:30 PM = 930
+  const endMinutes = 22 * 60 + 35;   // 3:30 PM = 930
 
   return totalMinutes >= startMinutes && totalMinutes <= endMinutes;
 }
@@ -18,15 +18,16 @@ function isWithinMarketHours() {
 function startCron() {
 console.log("Cron job started...");
 // Cron job: runs every minute
-cron.schedule('* * * * *', () => {
+setInterval(() => {
   if (isWithinMarketHours()) {
     console.log(`[${new Date().toLocaleTimeString()}] Job running within market hours...`);
     // Place your code here, e.g., fetch data from NSE
     saveOptionsCron();
+    saveOptionsCron("NIFTY");
   } else {
     console.log(`[${new Date().toLocaleTimeString()}] Outside market hours. Skipping.`);
   }
-});
+},60000);
 
 }
 export { startCron };
