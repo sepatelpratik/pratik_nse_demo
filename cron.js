@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 
-import { saveOptionsCron } from "./nse.js";
+import { saveOptionsCron } from './nse.js';
 
 // Helper to check if current time is between 9:30 AM and 3:30 PM
 function isWithinMarketHours() {
@@ -9,25 +9,24 @@ function isWithinMarketHours() {
   const minutes = now.getMinutes();
 
   const totalMinutes = hours * 60 + minutes;
-  const startMinutes = 9 * 60 + 10;  // 9:30 AM = 570
-  const endMinutes = 15 * 60 + 35;   // 3:30 PM = 930
+  const startMinutes = 9 * 60 + 10; // 9:30 AM = 570
+  const endMinutes = 15 * 60 + 35; // 3:30 PM = 930
 
   return totalMinutes >= startMinutes && totalMinutes <= endMinutes;
 }
 
 function startCron() {
-console.log("Cron job started...");
-// Cron job: runs every minute
-setInterval(() => {
-  if (isWithinMarketHours()) {
-    console.log(`[${new Date().toLocaleTimeString()}] Job running within market hours...`);
-    // Place your code here, e.g., fetch data from NSE
-    saveOptionsCron();
-    saveOptionsCron("NIFTY");
-  } else {
-    console.log(`[${new Date().toLocaleTimeString()}] Outside market hours. Skipping.`);
-  }
-},60000);
-
+  console.log('Cron job started...');
+  // Cron job: runs every minute
+  setInterval(() => {
+    if (isWithinMarketHours()) {
+      console.log(`[${new Date().toLocaleTimeString()}] Job running within market hours...`);
+      // Place your code here, e.g., fetch data from NSE
+      saveOptionsCron();
+      saveOptionsCron('NIFTY');
+    } else {
+      console.log(`[${new Date().toLocaleTimeString()}] Outside market hours. Skipping.`);
+    }
+  }, 60000);
 }
 export { startCron };

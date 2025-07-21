@@ -39,9 +39,9 @@ app.get('/', async (req, res) => {
   try {
     const files = await getAllFiles(BROWSE_DIR);
 
-    const htmlList = files.map(file =>
-      `<li><a href="/download/${encodeURIComponent(file)}">${file}</a></li>`
-    ).join('');
+    const htmlList = files
+      .map((file) => `<li><a href="/download/${encodeURIComponent(file)}">${file}</a></li>`)
+      .join('');
 
     res.send(`
       <h2>Download Files</h2>

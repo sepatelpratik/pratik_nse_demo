@@ -1,233 +1,244 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Option Strategy Viewer</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      padding: 20px;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Option Strategy Viewer</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f0f2f5;
+        padding: 20px;
+      }
 
-    .container {
-      max-width: 900px;
-      margin: auto;
-    }
+      .container {
+        max-width: 900px;
+        margin: auto;
+      }
 
-    .header {
-      margin-bottom: 20px;
-      padding: 15px;
-      background: #ffffff;
-      border-radius: 6px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+      .header {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #ffffff;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
 
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
 
-    .timestamp {
-      font-size: 14px;
-      color: #555;
-      margin-top: 5px;
-    }
+      .timestamp {
+        font-size: 14px;
+        color: #555;
+        margin-top: 5px;
+      }
 
-    .future-table {
-      margin-top: 10px;
-    }
+      .future-table {
+        margin-top: 10px;
+      }
 
-    .future-table table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
+      .future-table table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
 
-    .future-table th,
-    .future-table td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-    }
+      .future-table th,
+      .future-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
 
-    .future-table th {
-      background-color: #f5f5f5;
-    }
+      .future-table th {
+        background-color: #f5f5f5;
+      }
 
-    .strategy {
-      background: #fff;
-      border-left: 8px solid #ccc;
-      margin-bottom: 20px;
-      padding: 15px 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+      .strategy {
+        background: #fff;
+        border-left: 8px solid #ccc;
+        margin-bottom: 20px;
+        padding: 15px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
 
-    .strategy.ok {
-      border-left-color: #4CAF50;
-    }
+      .strategy.ok {
+        border-left-color: #4caf50;
+      }
 
-    .strategy.not-ok {
-      border-left-color: #F44336;
-    }
+      .strategy.not-ok {
+        border-left-color: #f44336;
+      }
 
-    .strategy h2 {
-      margin: 0 0 5px;
-      font-size: 18px;
-    }
+      .strategy h2 {
+        margin: 0 0 5px;
+        font-size: 18px;
+      }
 
-    .strategy .diff-row {
-      font-size: 14px;
-      margin-bottom: 10px;
-      color: #333;
-    }
+      .strategy .diff-row {
+        font-size: 14px;
+        margin-bottom: 10px;
+        color: #333;
+      }
 
-    .options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+      .options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
 
-    .option {
-      background: #f9f9f9;
-      border: 1px solid #ddd;
-      padding: 10px 15px;
-      border-radius: 4px;
-      flex: 1 1 45%;
-    }
+      .option {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 10px 15px;
+        border-radius: 4px;
+        flex: 1 1 45%;
+      }
 
-    .option .label {
-      font-weight: bold;
-      color: #555;
-    }
+      .option .label {
+        font-weight: bold;
+        color: #555;
+      }
 
-    .option .value {
-      margin-bottom: 6px;
-    }
+      .option .value {
+        margin-bottom: 6px;
+      }
 
-    .takeKey.ask {
-      color: #2196F3;
-    }
+      .takeKey.ask {
+        color: #2196f3;
+      }
 
-    .takeKey.bid {
-      color: #FF9800;
-    }
+      .takeKey.bid {
+        color: #ff9800;
+      }
 
-    .error {
-      color: red;
-      text-align: center;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header" id="header">
-      <h1>Option Strategy Viewer</h1>
-      <div class="timestamp" id="timestamp">Loading...</div>
-      <div class="future-table" id="futureData"></div>
+      .error {
+        color: red;
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header" id="header">
+        <h1>Option Strategy Viewer</h1>
+        <div class="timestamp" id="timestamp">Loading...</div>
+        <div class="future-table" id="futureData"></div>
+      </div>
+
+      <div id="optionContainer">
+        <p>Loading strategies...</p>
+      </div>
     </div>
 
-    <div id="optionContainer">
-      <p>Loading strategies...</p>
-    </div>
-  </div>
+    <script>
+      function formatDate(isoDate) {
+        const date = new Date(isoDate);
+        return date.toLocaleString('en-GB', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        });
+      }
 
-  <script>
-    function formatDate(isoDate) {
-      const date = new Date(isoDate);
-      return date.toLocaleString('en-GB', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
-    }
+      function getMonthFromKey(key) {
+        let match = key.split('-');
+        const monthNum = parseInt(match[1]);
+        const monthNames = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ];
+        return monthNames[monthNum - 1];
+      }
 
-    function getMonthFromKey(key) {
-      let match = key.split('-');
-      const monthNum = parseInt(match[1]);
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", 
-                          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      return monthNames[monthNum - 1];
-    }
+      async function loadOptionData() {
+        const container = document.getElementById('optionContainer');
+        const futureDiv = document.getElementById('futureData');
+        const timestampDiv = document.getElementById('timestamp');
 
-    async function loadOptionData() {
-      const container = document.getElementById('optionContainer');
-      const futureDiv = document.getElementById('futureData');
-      const timestampDiv = document.getElementById('timestamp');
+        try {
+          const response = await fetch('/api/data');
+          if (!response.ok) throw new Error('Failed to fetch data.');
+          const json = await response.json();
 
-      try {
-        const response = await fetch('/api/data');
-        if (!response.ok) throw new Error('Failed to fetch data.');
-        const json = await response.json();
+          // Format and display timestamp
+          timestampDiv.textContent = 'Last updated: ' + formatDate(json.timestamp);
 
-        // Format and display timestamp
-        timestampDiv.textContent = "Last updated: " + formatDate(json.timestamp);
+          // Format and display future data
+          const futureData = json.data.futureData;
+          let tableHTML = '<table><tr><th>Month</th><th>Value</th></tr>';
+          for (const key in futureData) {
+            const month = getMonthFromKey(key);
+            const val = futureData[key];
+            tableHTML += `<tr><td>${month}</td><td>${val}</td></tr>`;
+          }
+          tableHTML += '</table>';
+          futureDiv.innerHTML = tableHTML;
 
-        // Format and display future data
-        const futureData = json.data.futureData;
-        let tableHTML = '<table><tr><th>Month</th><th>Value</th></tr>';
-        for (const key in futureData) {
-          const month = getMonthFromKey(key);
-          const val = futureData[key];
-          tableHTML += `<tr><td>${month}</td><td>${val}</td></tr>`;
-        }
-        tableHTML += '</table>';
-        futureDiv.innerHTML = tableHTML;
+          // Display optionData
+          const strategies = json.data.optionData;
+          container.innerHTML = ''; // Clear loading text
 
-        // Display optionData
-        const strategies = json.data.optionData;
-        container.innerHTML = ''; // Clear loading text
+          strategies.forEach((strategy) => {
+            const strategyDiv = document.createElement('div');
+            strategyDiv.className = `strategy ${strategy.isOK ? 'ok' : 'not-ok'}`;
 
-        strategies.forEach(strategy => {
-          const strategyDiv = document.createElement('div');
-          strategyDiv.className = `strategy ${strategy.isOK ? 'ok' : 'not-ok'}`;
+            // Strategy name
+            const title = document.createElement('h2');
+            title.textContent = strategy.name;
+            strategyDiv.appendChild(title);
 
-          // Strategy name
-          const title = document.createElement('h2');
-          title.textContent = strategy.name;
-          strategyDiv.appendChild(title);
+            // Diff row
+            const diffRow = document.createElement('div');
+            diffRow.className = 'diff-row';
+            diffRow.textContent = `Diff: ${strategy.diff}`;
+            strategyDiv.appendChild(diffRow);
 
-          // Diff row
-          const diffRow = document.createElement('div');
-          diffRow.className = 'diff-row';
-          diffRow.textContent = `Diff: ${strategy.diff}`;
-          strategyDiv.appendChild(diffRow);
+            // Options list
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options';
 
-          // Options list
-          const optionsDiv = document.createElement('div');
-          optionsDiv.className = 'options';
-
-          strategy.option.forEach(opt => {
-            const optionDiv = document.createElement('div');
-            optionDiv.className = 'option';
-            optionDiv.innerHTML = `
+            strategy.option.forEach((opt) => {
+              const optionDiv = document.createElement('div');
+              optionDiv.className = 'option';
+              optionDiv.innerHTML = `
               <div class="value"><span class="label">Info:</span> ${opt.info}</div>
               <div class="value"><span class="label">Price:</span> ${opt.price.toFixed(2)}</div>
               <div class="value"><span class="label">Qty:</span> ${opt.qty}</div>
               <div class="value"><span class="label">Final Price:</span> ${opt.finalPrice}</div>
               <div class="value"><span class="label">Type:</span> <span class="takeKey ${opt.takeKey}">${opt.takeKey}</span></div>
             `;
-            optionsDiv.appendChild(optionDiv);
+              optionsDiv.appendChild(optionDiv);
+            });
+
+            strategyDiv.appendChild(optionsDiv);
+            container.appendChild(strategyDiv);
           });
-
-          strategyDiv.appendChild(optionsDiv);
-          container.appendChild(strategyDiv);
-        });
-
-      } catch (err) {
-        container.innerHTML = `<p class="error">Error loading data: ${err.message}</p>`;
-        console.error(err);
+        } catch (err) {
+          container.innerHTML = `<p class="error">Error loading data: ${err.message}</p>`;
+          console.error(err);
+        }
       }
-    }
 
-    window.addEventListener('DOMContentLoaded', loadOptionData);
-  </script>
-</body>
+      window.addEventListener('DOMContentLoaded', loadOptionData);
+    </script>
+  </body>
 </html>
